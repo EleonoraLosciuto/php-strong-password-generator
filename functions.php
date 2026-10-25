@@ -1,6 +1,23 @@
 <?php
-function pwGenerate($pw_length, $repetition) {
-                $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHILMNOPQRSTUVWXYZ0123456789!%/&';
+function pwGenerate($pw_length, $repetition, $lettere, $numeri, $simboli) {
+                $chars = '';
+                
+                if ($lettere) {
+                    $chars .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHILMNOPQRSTUVWXYZ';
+                 };
+
+                 if ($numeri) {
+                    $chars .= '0123456789';
+                 };
+                
+                if ($simboli) {
+                    $chars .= '!%/&';
+                };
+                
+                if (!$lettere && !$numeri && !$simboli ) {
+                    $chars .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHILMNOPQRSTUVWXYZ';
+                };
+                
                 $chars_length = strlen($chars);
                 $pw_string = '';
 

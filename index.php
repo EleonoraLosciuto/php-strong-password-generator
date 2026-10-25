@@ -9,7 +9,12 @@
         
     if (isset($_GET['pw_length']) && ($_GET['pw_length'] >= 8) && ($_GET['pw_length'] <= 15)) {
         $repetition = ($_GET['repetition'] === 'true');
-        $random_password = pwGenerate($_GET['pw_length'], $repetition);
+        $lettere = isset($_GET['lettere']);
+         $numeri = isset($_GET['numeri']);
+        $simboli = isset($_GET['simboli']);
+
+        $random_password = pwGenerate($_GET['pw_length'], $repetition, $lettere, $numeri, $simboli);
+
         $_SESSION['password_result'] = $random_password;
         header('Location:result.php');
         exit();
