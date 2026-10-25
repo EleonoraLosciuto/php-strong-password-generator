@@ -1,3 +1,21 @@
+<?php
+    session_start();
+
+    include_once './functions.php';
+
+    if (isset($_GET['pw_length']) && (($_GET['pw_length'] < 8) || ($_GET['pw_length'] > 15))) {
+        echo "<p class='bg-danger fg-contrast-danger fs-2xl'> Error: password length must be equal or greater than 8 and less or equal to 15 </p>";
+    };
+        
+    if (isset($_GET['pw_length']) && ($_GET['pw_length'] >= 8) && ($_GET['pw_length'] <= 15)) {
+        $repetition = ($_GET['repetition'] === 'true');
+        $random_password = pwGenerate($_GET['pw_length'], $repetition);
+        $_SESSION['password_result'] = $random_password;
+        header('Location:result.php');
+        exit();
+    };
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,11 +38,11 @@
 
             <div class="container dvw-80 border p-4">
                 <form action="" method="GET" class="lg:container">
-                    <div class="form-control gap-5">
+                    <div class="form-control gap-5 justify-content-between mb-5">
                         <label for="pw_length">Lunghezza caratteri (min 8):</label>
-                        <input type="number" name="pw_length" id="pw_length" min="8" max="16">
+                        <input type="number" name="pw_length" id="pw_length" min="8" max="15">
                     </div>
-                    <div class="form-control gap-5">
+                    <div class="form-control gap-5 justify-content-between mb-5">
                         <label for="repetition">Consenti ripetizioni di uno o piú caratteri:</label>
                         <div class="radio-options">
                             <input type="radio" name="repetition" id="repetition_yes" value="true" checked="checked">
@@ -33,27 +51,32 @@
                             <label for="repetition_no">No</label>
                         </div>
                     </div>
+                        <div class="checkbox-chars d-flex justify-content-between form-control mb-5">
+
+                            <div class="selezione-checkbox">Caratteri permessi:</div>
+
+                            <div>
+                                <div>
+                                    <input type="checkbox" name="lettere" id="lettere">
+                                    <label for="lettere">Lettere</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="numeri" id="numeri">
+                                    <label for="numeri">Numeri</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="simboli" id="simboli">
+                                    <label for="simboli">Simboli</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    
                     <div class="d-flex justify-content-start mt-5">
                         <button type="submit">Invia</button>
                     </div>
                 </form>
             </div>
-
-            <?php
-
-            include_once './functions.php';
-
-            if (isset($_GET['pw_length']) && (($_GET['pw_length'] < 8) || ($_GET['pw_length'] > 15))) {
-                echo "<p class='bg-danger fg-contrast-danger fs-2xl'> Error: password length must be equal or greater than 8 and less or equal to 15 </p>";
-            }
-        
-            if (isset($_GET['pw_length']) && ($_GET['pw_length'] >= 8) && ($_GET['pw_length'] <= 15)) {
-            $repetition = ($_GET['repetition'] === 'true');
-            var_dump($repetition);
-            $random_password = pwGenerate($_GET['pw_length'], $repetition);
-            echo "<p> la tua password: $random_password </p>" ;
-            }
-        ?>
         
         </div>
     </main>
