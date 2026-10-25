@@ -18,11 +18,20 @@
 
 
 
-            <div class="container:md dvw-80">
-                <form action="" method="GET" class="md:container">
+            <div class="container dvw-80 border p-4">
+                <form action="" method="GET" class="lg:container">
                     <div class="form-control gap-5">
                         <label for="pw_length">Lunghezza caratteri (min 8):</label>
                         <input type="number" name="pw_length" id="pw_length" min="8" max="16">
+                    </div>
+                    <div class="form-control gap-5">
+                        <label for="repetition">Consenti ripetizioni di uno o piú caratteri:</label>
+                        <div class="radio-options">
+                            <input type="radio" name="repetition" id="repetition_yes" value="true" checked="checked">
+                            <label for="repetition_yes">Sí</label>
+                            <input type="radio" name="repetition" id="repetition_no" value="false">
+                            <label for="repetition_no">No</label>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-start mt-5">
                         <button type="submit">Invia</button>
@@ -32,26 +41,39 @@
 
             <?php
 
-            function pwGenerate($pw_length) {
-                $chars = 'abcdefghijklmnopqrstuvwxyz0123456789!%/&';
+            function pwGenerate($pw_length, $repetition) {
+                $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHILMNOPQRSTUVWXYZ0123456789!%/&';
                 $chars_length = strlen($chars);
                 $pw_string = '';
 
-            for ($i = 0; $i < $pw_length; $i++) {
-                $selected_char = $chars[random_int(0, ($chars_length - 1))];
-                $pw_string .= $selected_char;
+            if ($repetition) {
+
+                for ($i = 0; $i < $pw_length; $i++) {
+                    $selected_char = $chars[random_int(0, ($chars_length - 1))];
+                    $pw_string .= $selected_char;
+                };
+            };
+
+            if (!($repetition)) {
+                while (strlen($pw_string) < $pw_length) {
+                     $selected_char = $chars[random_int(0, ($chars_length - 1))];
+                    if (!str_contains($pw_string, $selected_char)) {
+                        $pw_string .= $selected_char;
+                    };
+                };
             };
             return $pw_string;
             };
 
 
-            if (isset($_GET['pw_length']) && ($_GET['pw_length'] < 8)) {
-                echo "<p class='bg-danger fg-contrast-danger fs-2xl'> Error: password length must be equal or greater than 8 </p>";
+            if (isset($_GET['pw_length']) && (($_GET['pw_length'] < 8) || ($_GET['pw_length'] > 15))) {
+                echo "<p class='bg-danger fg-contrast-danger fs-2xl'> Error: password length must be equal or greater than 8 and less or equal to 15 </p>";
             }
         
-            if (isset($_GET['pw_length']) && ($_GET['pw_length'] >= 8)) {
-            echo "pw length set";
-            $random_password = pwGenerate($_GET['pw_length']);
+            if (isset($_GET['pw_length']) && ($_GET['pw_length'] >= 8) && ($_GET['pw_length'] <= 15)) {
+            $repetition = ($_GET['repetition'] === 'true');
+            var_dump($repetition);
+            $random_password = pwGenerate($_GET['pw_length'], $repetition);
             echo "<p> la tua password: $random_password </p>" ;
             }
         ?>
